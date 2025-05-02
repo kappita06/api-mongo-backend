@@ -1,32 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const Category = require('../models/Categoria')
+const Client = require('../models/Cliente')
 
-//listar categorias
+//listar Clientes
 router.get('/', async (req,res) => {
     try{
-       const list = await Category.find();
+       const list = await Client.find();
        res.json(list);
     }catch(e){
         res.status(500).json({ error: e.message });
     }
 });
 
-// POST - Crear una nueva categoría
+// POST - Crear una nueva Cliente
 router.post('/', async (req, res) => {
     try {
-        const nuevaCategoria = new Category(req.body);
-        await nuevaCategoria.save();
-        res.status(201).json(nuevaCategoria);
+        const nuevoCliente = new Client(req.body);
+        await nuevoCliente.save();
+        res.status(201).json(nuevoCliente);
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
 });
 
-// PUT - Actualizar una categoría completa
+// PUT - Actualizar una Cliente completa
 router.put('/:id', async (req, res) => {
     try {
-        const actualizado = await Category.findByIdAndUpdate(
+        const actualizado = await Client.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true, overwrite: true, runValidators: true }
@@ -37,10 +37,10 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// PATCH - Actualizar parcialmente un producto
+// PATCH - Actualizar parcialmente un Cliente
 router.patch('/:id', async (req, res) => {
     try{
-        const actualizado =  await Category.findByIdAndUpdate(
+        const actualizado =  await Client.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true, runValidators: true}
@@ -51,10 +51,10 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
-// DELETE - Eliminar un producto
+// DELETE - Eliminar un Cliente
 router.delete('/:id', async (req, res) => {
     try{
-        const eliminado = await Category.findByIdAndDelete(req.params.id);
+        const eliminado = await Client.findByIdAndDelete(req.params.id);
         res.status(200).json(eliminado);
     }catch(e){
         res.status(500).json({ error: e.message });
