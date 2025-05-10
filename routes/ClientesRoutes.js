@@ -4,12 +4,21 @@ const Client = require('../models/Cliente')
 
 //listar Clientes
 router.get('/', async (req,res) => {
-    try{
-       const list = await Client.find();
-       res.json(list);
-    }catch(e){
-        res.status(500).json({ error: e.message });
-    }
+    try {
+        const userAgent = req.headers['user-agent'];
+    
+        let clientes;
+
+        if (userAgent && userAgent.includes('Postman')) {
+            clientes = await Client.find({}, { _id: 0});
+        } else {
+            clientes = await Client.find();
+        }
+        res.json(clientes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener productos');
+    }
 });
 
 // POST - Crear una nueva Cliente

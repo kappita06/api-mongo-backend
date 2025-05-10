@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
+
 
 //requerir las rutas de categorias para la api rest
 const categoryRoutes = require('./routes/CategoryRoutes');
@@ -23,10 +25,12 @@ app.use('/api/categorias', categoryRoutes);
 app.use('/api/productos', productRoutes);
 app.use('/api/ventas', VentasRoutes);
 app.use('/api/clientes', ClientesRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 //Conexión a MongoDB y arranca el servidor
 mongoose
-    .connect(process.env.MONGODB_URI,{ useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('Conectado correctamente a MongoDB');
         app.listen(process.env.PORT, () => 

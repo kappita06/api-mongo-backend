@@ -3,13 +3,22 @@ const router = express.Router();
 const Vent = require('../models/Venta')
 
 //listar Ventas
-router.get('/', async (req,res) => {
-    try{
-       const list = await Vent.find();
-       res.json(list);
-    }catch(e){
-        res.status(500).json({ error: e.message });
-    }
+router.get('/', async (req, res) => {
+    try {
+        const userAgent = req.headers['user-agent'];
+        let ventass;
+
+        if (userAgent && userAgent.includes('Postman')) {
+            ventass = await Vent.find({}, { _id: 0, cliente_id: 0, producto_id: 0, fecha: 0 });
+        } else {
+            ventass = await Vent.find();
+        }
+
+        res.json(ventass);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener productos');
+    }
 });
 
 // POST - Crear una nueva Venta

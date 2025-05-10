@@ -4,13 +4,25 @@ const Product = require('../models/Producto');
 
 
 //listar Productos
-router.get('/', async (req,res) => {
-    try{
-       const list = await Product.find();
-       res.json(list);
-    }catch(e){
-        res.status(500).json({ error: e.message });
-    }
+router.get('/', async (req, res) => {
+    try {
+        const userAgent = req.headers['user-agent'];
+
+        let productos;
+
+        if (userAgent && userAgent.includes('Postman')) {
+            // Si el request viene de Postman, ocultamos _id
+            productos = await Product.find({}, { _id: 0, categoria_id: 0 });
+        } else {
+            // Si el request viene del navegador (frontend), mostramos _id
+            productos = await Product.find(); // <- aquí también
+        }
+
+        res.json(productos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener productos');
+    }
 });
 
 // POST - Crear una nuevo Producto

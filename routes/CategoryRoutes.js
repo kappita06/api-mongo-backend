@@ -4,12 +4,21 @@ const Category = require('../models/Categoria')
 
 //listar categorias
 router.get('/', async (req,res) => {
-    try{
-       const list = await Category.find();
-       res.json(list);
-    }catch(e){
-        res.status(500).json({ error: e.message });
-    }
+    try {
+        const userAgent = req.headers['user-agent'];
+    
+        let categorias;
+
+        if (userAgent && userAgent.includes('Postman')) {
+            categorias = await Category.find({}, { _id: 0, date_created: 0, date_creates: 0});
+        } else {
+            categorias = await Category.find();
+        }
+        res.json(categorias);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener productos');
+    }
 });
 
 // POST - Crear una nueva categoría
